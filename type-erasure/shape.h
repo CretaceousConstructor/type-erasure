@@ -137,6 +137,48 @@ class Shape
 		}
 	};
 
+
+
+	template < typename ShapeT
+		, typename DrawStrategy>
+	class ExtendedModel : public ShapeConcept
+	{
+		ShapeT shape_;
+		DrawStrategy drawer_;
+	public:
+		explicit ExtendedModel(
+			ShapeT shape,
+			DrawStrategy drawer
+		) :
+			shape_(std::move(shape)),
+			drawer_(std::move(drawer))
+		{
+		}
+
+		void serialize() const override
+		{
+			using ::serialize;
+			serialize(shape_);
+		}
+
+		void draw() const override
+		{
+			drawer_(shape_);
+		}
+
+		void print(std::ostream& os) const override
+		{
+			os << shape_;
+		}
+
+		// The Prototype Design Pattern
+		std::unique_ptr<ShapeConcept> clone() const override
+		{
+			return std::make_unique<ExtendedModel>(*this);
+		}
+
+	};
+
 	// The Bridge Design Pattern
 	std::unique_ptr<ShapeConcept> pimpl_;
 
@@ -144,7 +186,14 @@ public:
  // A constructor template to create a bridge.
 	template <IsShape T>
 	Shape(const T& x)
-		: pimpl_{ new ShapeModel<T>(x) }
+		//: pimpl_{ new ShapeModel<T>(x) }
+		: pimpl_{ std::make_unique<ShapeModel<T>>(x) }
+	{
+	}
+
+	template <typename ShapeT, typename DrawStrategy>
+	Shape(ShapeT shape, DrawStrategy drawer)    //This is the point of dependency injection.
+		: pimpl_{ std::make_unique<ExtendedModel<ShapeT,DrawStrategy>>(std::move(shape),std::move(drawer)) }
 	{
 	}
 
