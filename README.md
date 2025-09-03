@@ -5,27 +5,20 @@ Implementation of Klaus Iglberger's C++ Type Erasure Design Pattern.
 The code is based on Klaus Iglberger's talk "Breaking Dependencies: Type
 Erasure - A Design Analysis" on CppCon 2021.
 
-The code is written in C++20 and tested on macOS Ventura with M1 Max CPU.
-- Apple clang 14.0.0.
-- GCC 12.2.0 on Ubuntu 22.10 on UTM.
-- GCC 12.2.0 with Homebrew.
+The code is written in C++20 and tested on windows10 with intel x86_64 and NV gpu.
 
 ## Intent
 
-Implement subtyping and runtime polymorphism without coupling of the interface
-and concrete classes.
+Implement subtyping and runtime polymorphism without coupling of the interface and concrete classes.
 
 ## Requirements
 
 1. Non-intrusive (Open-Closed Principle)
-  - Concrete classes do not depend on the base class. (They are not required to
-    inherit the same base class.)
-  - Operations on concrete classes are defined as global functions. (They are
-    not required to have virtual functions.)
+  - Concrete classes do not depend on the base class. (They are not required to inherit the same base class.)
+  - Operations on concrete classes are defined as global functions. (They are not required to have virtual functions.)
 
 2. Supports Subtyping and Runtime Polymorphism (Liskov Substitution Principle)
-  - Objects of concrete classes can be implicitly converted to objects of the
-    base class.
+  - Objects of concrete classes can be implicitly converted to objects of the base class.
   - Operations are dispatched at runtime to specialized implementations.
 
 ## High Level Summary of the Design
@@ -44,56 +37,6 @@ Taking the `Shape` hierarchy as an example.
   - The templated implementation of `ShapeConcept`.
   - Routes virtual functions to global functions.
 
-## Build and Run with Bazel
-
-### Running with native build environment (Clang on macOS or GCC on Linux)
-
-Run the single-file version:
-
-```bash
-bazel run //type-erasure:type-erasure
-```
-
-Run the multiple-file version:
-
-```bash
-bazal run //type-erasure:main
-```
-
-### Running with GCC Homebrew on macOS
-
-Run the single-file version:
-
-```bash
-bazel run --config=gcc_config //type-erasure:type-erasure
-```
-
-Run the multiple-file version:
-
-```bash
-bazel run --config=gcc_config --action_env=WORKSPACE_DIR=${PWD} type-erasure/main
-```
-
-## Build and Run with Make
-
-Run the multiple-file version:
-
-```bash
-make run
-```
-
-Run the single-file version:
-
-```bash
-make -C type-erasure run-type-erasure
-```
-
-## Dependencies
-
-- (optional) Bazel (https://bazel.build/)
-  - How to install: https://github.com/bazelbuild/bazelisk
-
-- (optional) Make
 
 ## References
 
